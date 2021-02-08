@@ -13,7 +13,7 @@ end to end web app that has a CNN model to classify between cats &amp; dogs imag
 #### tested with users camera images.
 
 <img src="https://github.com/richakbee/Image-Classification/blob/main/screenshot/cat.png" />
-
-<img src="https://github.com/richakbee/Image-Classification/blob/main/screenshot/dog.png" width="800px" height= "300px"/>
+<hr>
+<img src="https://github.com/richakbee/Image-Classification/blob/main/screenshot/dog.png" />
 
 
