@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dog Vs Cat</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<style>
+		body{background-color: #eff2f9;}
+		.iupload h3{color: #1b2d6b;font-size: 30px;font-weight: 700;}
+		.img-part{height:300px;width:300px;margin:0px auto;}
+		.image-part{height:300px;width:300px;border:1px solid #1b2d6b;}
+		.image-part img{position:absolute;height: 300px;width:300px;display:none;padding:5px;}
+		.image-part #video{display:block;height: 300px;width:300px;padding:5px;}
+		.res-part{border:1px solid #dedede;margin-left:20px;height: 310px;width:100%;padding:5px;margin:0px auto;overflow:auto;}
+		.res-part2{border:1px solid #dedede;height: 310px;width:100%;padding:5px;margin:0px auto;}
+		.resp-img{height: 298px;width: 233px;margin:0px auto;}
+		.jsonRes{margin-left:30px;}
+		#send{cursor:pointer;}
+		.btn-part{width:325px;}
+		textarea,
+		select,
+		.form-control,
+		.custom-select,
+		button.btn,
+		.btn-primary,
+		input[type="text"],
+		input[type="url"],
+		.uneditable-input{
+			border: 1px solid #363e75;
+			outline: 0 !important;
+			border-radius:0px;
+			box-shadow: none;
+		   -webkit-box-shadow: none;
+		   -moz-box-shadow: none;
+		   -moz-transition: none;
+		   -webkit-transition: none;
+		}
+		textarea:focus,
+		select:focus,
+		.form-control:focus,
+		.btn:focus,
+		.btn-primary:focus,
+		.custom-select:focus,
+		input[type="text"]:focus,
+		.uneditable-input:focus{
+			border: 1px solid #007bff;
+			outline: 0 !important;
+			border-radius:0px;
+			box-shadow: none;
+		   -webkit-box-shadow: none;
+		   -moz-box-shadow: none;
+		   -moz-transition: none;
+		   -webkit-transition: none;
+		}
+		#loading {
+			position: fixed;
+			left: 0px;
+			top: 0px;
+			width: 100%;
+			height: 100%;
+			z-index: 9999999999;
+			overflow: hidden;
+			background: rgba(255, 255, 255, 0.7);
+		}
+		.loader {
+			border: 8px solid #f3f3f3;
+			border-top: 8px solid #363e75;
+			border-radius: 50%;
+			width: 60px;
+			height: 60px;
+			left: 50%;
+			margin-left: -4em;
+			display: block;
+			animation: spin 2s linear infinite;
+		}
+		.loader,
+		.loader:after {display: block;position: absolute;top: 50%;margin-top: -4.05em;}
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+		.right-part{border:1px solid #dedede;padding:5px;}
+		.logo{position:absolute;right:0px;bottom:0px;margin-right:30px;margin-bottom:30px;}
+	</style>
+</head>
+
+<body>
+
+<div class="main container">
+		<section class="iupload">
+			<h3 class="text-center py-4">Object Classification</h3>
+			<div class="row">
+				<div class="col-md-6">
+                  <p ><img id="output_img" width="300" height="300px" style="border:1px solid black" src="https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18824.jpg?size=338&ext=jpg"/></p>
+					<div class="btn-part">
+						<form id="upload-data pt-3" class="" action="{{ url_for('predict')}}"method="post" enctype="multipart/form-data">
+							<div class="input-group mt-3 row">
+								<button type="button" class="btn btn-primary col-md-5 col-xs-5 ml-3 mr-4" id="uload"><label for="file" style="cursor: pointer;" >Upload</label></button>
+								<button id="send" type="submit" class="btn btn-success col-md-5 col-xs-5" >Predict</button>
+
+							</div>
+
+
+
+
+
+
+							<!-- change url value  -->
+
+
+
+                            <input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;">
+
+
+                        </form>
+					</div>
+				</div>
+				<div class="col-md-6 col-xs-12 right-part">
+					<h5 class="mb-2"><center>Prediction Results</center></h5>
+					<div class="row">
+						<div class="res-part2 col-md-5 col-xs-12">
+						<img id="dog" src="https://media.giphy.com/media/Rdx8SHjHhiVUI/giphy.gif"height="300px" width="250px" />
+
+						</div>
+						<div class="res-part col-md-5 col-xs-12">
+							<p id="pred_text" style="font-size:30px">{{prediction_text}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+
+
+
+<!--<div id="loading"><div class="loader"></div></div>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script>
+var loadFile = function(event) {
+	var image = document.getElementById('output_img');
+	image.src = URL.createObjectURL(event.target.files[0]);
+};
+
+
+
+
+</script>
+</body>
+</html>
+
